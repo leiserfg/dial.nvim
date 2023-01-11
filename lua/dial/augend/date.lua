@@ -271,6 +271,20 @@ local date_elements = {
             return WEEKDAYS_JA[wday]
         end,
     },
+
+    ["o"] = {
+        kind = "day",
+        regex = [[\d\d?(st|sd|rd|th)]],
+        update_date = function (text, date)
+          date.day = tonumber(text:sub(1, -3))
+          return date
+        end,
+        format = function(time)
+            local day = os.date("*t", time).day --[[ @as integer ]]
+            local suffix = ({'st', 'sd', 'rd'})[day % 10] or "th"
+            return ("%s%s"):format(day, suffix)
+        end,
+    },
 }
 
 ---@param pattern string
